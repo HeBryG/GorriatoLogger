@@ -21,19 +21,26 @@ jobs:
           node-version: '20' # Ensure this matches your project's Node.js version
           cache: 'npm' # Cache npm dependencies for faster builds
 
-      - name: Install dependencies
-        run: npm install
-      - name: Install Wine and other build tools for cross-compilation
+      - name: Install Wine and Xvfb for Windows cross-compilation
         run: |
           # Add i386 architecture for Wine's 32-bit components
           sudo dpkg --add-architecture i386
+          
+          # Download and add the WineHQ key
+          sudo mkdir -pm755 /etc/apt/keyrings
+          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+          
+          # Add the WineHQ repository for Ubuntu (using lsb_release to get the correct codename)
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
+          
           # Update package lists
           sudo apt-get update
-          # Install Wine (64-bit and 32-bit support) and other common build tools
-          # Removed libicns-utils and icnsutils as they are for macOS icon handling
+          
+          # Install Wine-stable (which should pull in wine32 and wine64) and Xvfb
+          # Also include other common build tools that electron-builder might rely on
           sudo apt-get install -y --no-install-recommends \
-            wine \
-            wine64 \
+            wine-stable \
+            xvfb \
             graphicsmagick \
             libpng-dev \
             libjpeg-dev \
@@ -46,15 +53,19 @@ jobs:
 
       - name: Build and Release Electron App for Windows (x64) and Linux (AppImage)
         env:
-          # GitHub Token for uploading assets to releases
-          # This token is automatically provided by GitHub Actions
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Tell electron-builder to skip the rcedit step, which requires a display server (though Xvfb helps too)
           WIN_BUILD_FOR_BROWSER: true
-          # Optional: If you have a private code signing certificate or other secrets for electron-builder,
-          # define them here as repository secrets.
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Set DISPLAY to use Xvfb, providing a virtual screen for Wine
+          DISPLAY: :99.0
+          # CSC_LINK: ${{ secrets.CSC_LINK }} # Optional: For code signing
+          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }} # Optional: For code signing
         run: |
+          # Start Xvfb (X Virtual Framebuffer) in the background on display :99
+          Xvfb :99 -ac -screen 0 1280x1024x24 &
+          # Give Xvfb a moment to start up
+          sleep 3
+          
           # Build for Windows (x64)
           npm run build:win64 -- --publish onTag
           # Build for Linux (AppImage)
