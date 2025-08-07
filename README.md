@@ -1,6 +1,7 @@
 ## Gorriato Logger
 This is the companion Logger app for the GorriatoQRP Series transceivers.
 It is a simple to understand logbook, with capability of upload to eqsl.
+<img width="1004" height="632" alt="image" src="https://github.com/user-attachments/assets/5507379e-00fd-4e4e-8556-9a3d178d1560" />
 ## Usage
 ### Install Dependencies
 
