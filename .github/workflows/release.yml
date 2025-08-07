@@ -1,0 +1,40 @@
+# .github/workflows/release.yml
+
+name: Release Electron App
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Trigger on pushes to tags like v1.0.0, v1.0.1, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest # Use Ubuntu for building both AppImage and Windows .exe (via cross-compilation)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Ensure this matches your project's Node.js version
+          cache: 'npm' # Cache npm dependencies for faster builds
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and Release Electron App for Windows (x64) and Linux (AppImage)
+        env:
+          # GitHub Token for uploading assets to releases
+          # This token is automatically provided by GitHub Actions
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: If you have a private code signing certificate or other secrets for electron-builder,
+          # define them here as repository secrets.
+          # CSC_LINK: ${{ secrets.CSC_LINK }}
+          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: |
+          # Build for Windows (x64)
+          npm run build:win64 -- --publish onTag
+          # Build for Linux (AppImage)
+          npm run build:linux -- --publish onTag
