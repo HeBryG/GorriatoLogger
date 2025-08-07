@@ -4,7 +4,7 @@
   "description": "Logbook companion for GorriatoQRP",
   "version": "1.0.0",
   "author": "EA4IIF<hectorberryg@gmail.com>",
-  "main": "app/background.js",
+  "main": "dist/main/background.js",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
