@@ -46,23 +46,23 @@ const EQSLUpload: React.FC = ({ }) => {
       return;
     }
 
-    setIsLoading(true);
-    setUploadStatus('Uploading to eQSL...');
+    // setIsLoading(true);
+    // setUploadStatus('Uploading to eQSL...');
 
-    try {
-      // Password is NOT passed from renderer; main process retrieves it
-    //   const result = await window.api.uploadLogsToEQSL(
-    //     userId,
-    //     eqslUsername,
-    //     qthNickname || null
-    //   );
-      setUploadStatus(result.success ? 'Upload successful!' : `Upload failed: ${result.message}`);
-    } catch (error: any) {
-      console.error('eQSL upload error:', error);
-      setUploadStatus(`Upload failed: ${error.message || 'An unknown error occurred.'}`);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   // Password is NOT passed from renderer; main process retrieves it
+    // //   const result = await window.api.uploadLogsToEQSL(
+    // //     userId,
+    // //     eqslUsername,
+    // //     qthNickname || null
+    // //   );
+    //   setUploadStatus(result.success ? 'Upload successful!' : `Upload failed: ${result.message}`);
+    // } catch (error: any) {
+    //   console.error('eQSL upload error:', error);
+    //   setUploadStatus(`Upload failed: ${error.message || 'An unknown error occurred.'}`);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
