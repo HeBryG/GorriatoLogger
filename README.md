@@ -1,7 +1,7 @@
 ## Gorriato Logger
 This is the companion Logger app for the GorriatoQRP Series transceivers.
 It is a simple to understand logbook, with capability of upload to eqsl.
-<img width="804" height="432" alt="image" src="https://github.com/user-attachments/assets/5507379e-00fd-4e4e-8556-9a3d178d1560" />
+<img width="1004" height="632" alt="image" src="https://github.com/user-attachments/assets/5507379e-00fd-4e4e-8556-9a3d178d1560" />
 
 The application is available for Unix and Windows environments(macOS experimental)
 The core is basically a web browser embedded on a process, so its not really a desktop app per se, but a webapp served locally with an embedded browser.
