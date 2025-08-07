@@ -21,6 +21,14 @@ jobs:
           node-version: '20' # Ensure this matches your project's Node.js version
           cache: 'npm' # Cache npm dependencies for faster builds
 
+      - name: Clean install dependencies
+        # Use npm ci for a clean install, which is often more reliable in CI environments
+        run: npm ci
+
+      - name: Run postinstall script
+        # Explicitly run the postinstall script, as npm ci might not always trigger it
+        run: npm run postinstall
+
       - name: Install Wine and Xvfb for Windows cross-compilation
         run: |
           # Add i386 architecture for Wine's 32-bit components
@@ -66,7 +74,8 @@ jobs:
           # Give Xvfb a moment to start up
           sleep 3
           
-          # Build for Windows (x64) using npx
-          npx nextron build --win --x64 --publish onTag
-          # Build for Linux (AppImage) using npx
-          npx nextron build --linux --publish onTag
+          # Build for Windows (x64) using npm run directly
+          # npm run commands automatically put node_modules/.bin in PATH
+          npm run build:win64 -- --publish onTag
+          # Build for Linux (AppImage) using npm run directly
+          npm run build:linux -- --publish onTag
