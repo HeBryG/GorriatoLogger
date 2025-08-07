@@ -26,11 +26,13 @@ jobs:
         run: npm ci
 
       - name: Run postinstall script
-        # Explicitly run the postinstall script, as npm ci might not always trigger it
         run: npm run postinstall
 
       - name: Install Wine and Xvfb for Windows cross-compilation
         run: |
+          # Remove any existing Wine configuration to ensure a clean start
+          rm -rf ~/.wine || true # '|| true' prevents failure if .wine doesn't exist
+          
           # Add i386 architecture for Wine's 32-bit components
           sudo dpkg --add-architecture i386
           
@@ -39,15 +41,18 @@ jobs:
           sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
           
           # Add the WineHQ repository for Ubuntu (using lsb_release to get the correct codename)
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
+          # Using 'stable' branch for more reliability
+          sudo wget -NP /etc/apt/sources.d/winehq-$(lsb_release -cs).sources https://dl.winehq.org/wine-builds/ubuntu/dists/$(lsb_release -cs)/winehq-$(lsb_release -cs).sources
           
           # Update package lists
           sudo apt-get update
           
           # Install Wine-stable (which should pull in wine32 and wine64) and Xvfb
-          # Also include other common build tools that electron-builder might rely on
+          # Explicitly install wine32 and common 32-bit libs like libstdc++6:i386
           sudo apt-get install -y --no-install-recommends \
             wine-stable \
+            wine32 \
+            wine64 \
             xvfb \
             graphicsmagick \
             libpng-dev \
@@ -57,7 +62,16 @@ jobs:
             libxkbfile-dev \
             fakeroot \
             rpm \
-            dpkg
+            dpkg \
+            libstdc++6:i386 # Crucial 32-bit runtime dependency for many Wine apps
+          
+          # Initialize Wine prefix and ensure it's a 64-bit prefix
+          # This creates the .wine directory and sets up the basic Windows environment
+          export WINEARCH=win64
+          export WINEPREFIX=/home/runner/.wine # Explicitly set WINEPREFIX for clarity
+          wineboot -u # Update/initialize Wine prefix
+          # A short sleep to ensure Wine is fully initialized
+          sleep 5
 
       - name: Build and Release Electron App for Windows (x64) and Linux (AppImage)
         env:
@@ -72,10 +86,9 @@ jobs:
           # Start Xvfb (X Virtual Framebuffer) in the background on display :99
           Xvfb :99 -ac -screen 0 1280x1024x24 &
           # Give Xvfb a moment to start up
-          sleep 3
+          sleep 5 # Increased sleep time to ensure Xvfb is ready
           
           # Build for Windows (x64) using npm run directly
-          # npm run commands automatically put node_modules/.bin in PATH
           npm run build:win64 -- --publish onTag
           # Build for Linux (AppImage) using npm run directly
           npm run build:linux -- --publish onTag
