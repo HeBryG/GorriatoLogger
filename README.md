@@ -1,29 +1,16 @@
-<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
-
+## Gorriato Logger
+This is the companion Logger app for the GorriatoQRP Series transceivers.
+It is a simple to understand logbook, with capability of upload to eqsl.
 ## Usage
-
-### Create an App
-
-```
-# with npx
-$ npx create-nextron-app my-app --example with-tailwindcss
-
-# with yarn
-$ yarn create nextron-app my-app --example with-tailwindcss
-
-# with pnpm
-$ pnpm dlx create-nextron-app my-app --example with-tailwindcss
-```
-
 ### Install Dependencies
 
 ```
-$ cd my-app
+$ cd logger
 
 # using yarn or npm
 $ yarn (or `npm install`)
 
-# using pnpm
+# using pnpmmy-app
 $ pnpm install --shamefully-hoist
 ```
 
