@@ -1,0 +1,12 @@
+appId: com.ea4iif.gorriatologger
+productName: Gorriato Logger
+copyright: Copyright © 2025 EA4IIF
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
