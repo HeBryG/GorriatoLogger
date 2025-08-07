@@ -72,6 +72,10 @@ jobs:
           wineboot -u # Update/initialize Wine prefix
           # A short sleep to ensure Wine is fully initialized
           sleep 5
+          
+      - name: Install Snapcraft for Linux Snap builds
+        # Snapcraft is needed if electron-builder tries to build .snap packages
+        run: sudo snap install snapcraft --classic
 
       - name: Build and Release Electron App for Windows (x64) and Linux (AppImage)
         env:
