@@ -4,7 +4,7 @@
   "description": "Logbook companion for GorriatoQRP",
   "version": "1.0.0",
   "author": "EA4IIF<hectorberryg@gmail.com>",
-  "main": "dist/main/background.js",
+  "main": "dist/main/index.js",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
@@ -19,10 +19,12 @@
     "appId": "com.yourcompany.gorriatologger",
     "productName": "Gorriato Logger",
     "files": [
-      "*"
+      "*",
+      "dist/**/*",
+      "node_modules/**/*"
     ],
     "directories": {
-      "output": "release"
+      "output": "dist"
     },
     "win": {
       "target": "nsis",
