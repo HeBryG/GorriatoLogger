@@ -23,7 +23,28 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+      - name: Install Wine for Windows cross-compilation
+        run: |
+          # Add i386 architecture for Wine's 32-bit components, often needed even for x64 builds
+          sudo dpkg --add-architecture i386
+          # Update package lists
+          sudo apt-get update
+          # Install Wine (64-bit and 32-bit support) and other common build tools
+          sudo apt-get install -y --no-install-recommends \
+            wine \
+            wine64 \
+            icnsutils \
+            graphicsmagick \
+            libicns-utils \
+            libpng-dev \
+            libjpeg-dev \
+            libtiff-dev \
+            libgif-dev \
+            libxkbfile-dev \
+            fakeroot \
+            rpm \
+            dpkg
+            
       - name: Build and Release Electron App for Windows (x64) and Linux (AppImage)
         env:
           # GitHub Token for uploading assets to releases
