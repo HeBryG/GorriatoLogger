@@ -49,6 +49,7 @@ jobs:
           # GitHub Token for uploading assets to releases
           # This token is automatically provided by GitHub Actions
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WIN_BUILD_FOR_BROWSER: true
           # Optional: If you have a private code signing certificate or other secrets for electron-builder,
           # define them here as repository secrets.
           # CSC_LINK: ${{ secrets.CSC_LINK }}
