@@ -1,6 +1,6 @@
 // src/main/safeStorageHandler.ts (New file for safeStorage logic)
 import { safeStorage } from 'electron';
-import { db } from './database'; // Assuming your Firestore `db` instance is exported from database.ts
+import { db } from './database.js'; // Assuming your Firestore `db` instance is exported from database.ts
 
 interface StoredCredentials {
   encryptedPassword: string; // Stored as a string (base64 encoded Buffer)

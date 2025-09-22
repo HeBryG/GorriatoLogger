@@ -1,11 +1,30 @@
-import path from 'path'
-import { app, ipcMain } from 'electron'
-import serve from 'electron-serve'
-import { createWindow } from './helpers'
-import {closeDatabase, initializeDatabase, addUser, addLog, getLogs, getUsers} from './database'; // Import your database module
-import { saveEQSLCredentials, getEQSLCredentials } from './secureStorage';
-const isProd = process.env.NODE_ENV === 'production'
+import path from 'path';
+import { app, ipcMain } from 'electron';
+import serve from 'electron-serve';
 
+// 👇 Add .js (TypeScript will turn .ts → .js)
+import { createWindow } from './helpers/create-window.js';
+
+import {
+  closeDatabase,
+  initializeDatabase,
+  addUser,
+  addLog,
+  getLogs,
+  getUsers,
+} from './database.js';
+
+import {
+  saveEQSLCredentials,
+  getEQSLCredentials,
+} from './secureStorage.js';
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const isProd = process.env.NODE_ENV === 'production';
 // Helper function to convert a single log entry to ADIF format
 // This is a simplified example; a full ADIF converter would be more complex
 function convertLogToADIF(log: any): string {
